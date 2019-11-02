@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  traefik:
+    container_name: traefik
+    image: {{ docker_traefik_image }}
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '{{ docker_traefik_base_dir }}/data/traefik.toml:/traefik.toml:ro'
+      - '{{ docker_traefik_base_dir }}/data/file-provider.yml:/file-provider.yml:ro'
+      - '{{ docker_traefik_base_dir }}/data/acme.json:/acme.json'
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - {{ docker_traefik_network }}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik-http.entrypoints=http"
+      - "traefik.http.routers.traefik-http.rule=Host(`{{ docker_traefik_dashboard_url }}`)"
+      - "traefik.http.routers.traefik-http.middlewares=https-redirect@file"
+      - "traefik.http.routers.traefik-https.entrypoints=https"
+      - "traefik.http.routers.traefik-https.rule=Host(`{{ docker_traefik_dashboard_url }}`)"
+      - "traefik.http.routers.traefik-https.middlewares=htpasswd-auth@file{% if docker_traefik_dashboard_ip_whitelist is defined %},ip-whitelist@file{% endif %}"
+      - "traefik.http.routers.traefik-https.tls=true"
+      - "traefik.http.routers.traefik-https.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik-https.service=api@internal"
+
+networks:
+  {{ docker_traefik_network }}:
+    external: true

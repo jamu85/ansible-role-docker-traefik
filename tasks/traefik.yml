@@ -1,0 +1,41 @@
+---
+
+- name: create folder structure
+  file:
+    path: "{{ docker_traefik_base_dir }}/data"
+    state: directory
+
+- name: write traefik static configuration
+  template:
+    src: templates/data/traefik.toml.j2
+    dest: "{{ docker_traefik_base_dir }}/data/traefik.toml"
+  notify: restart traefik
+
+- name: write traefik file provider configuration
+  template:
+    src: templates/data/file-provider.yml.j2
+    dest: "{{ docker_traefik_base_dir }}/data/file-provider.yml"
+  notify: restart traefik
+
+- name: write let's encrypt acme container
+  file:
+    path: "{{ docker_traefik_base_dir }}/data/acme.json"
+    mode: '0600'
+    modification_time: preserve
+    access_time: preserve
+    state: touch
+
+- name: write docker-compose.yml for traefik
+  template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ docker_traefik_base_dir }}/docker-compose.yml"
+
+- name: create network
+  docker_network:
+    name: "{{ docker_traefik_network }}"
+
+- name: control traefik container
+  docker_compose:
+    project_src: "{{ docker_traefik_base_dir }}"
+    pull: "{{ docker_traefik_pull }}"
+    stopped: "{{ docker_traefik_stopped }}"

@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  hello-world:
+    container_name: hello-world
+    image: tutum/hello-world
+    networks:
+      - {{ docker_traefik_network }}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hello-world-http.entrypoints=http"
+      - "traefik.http.routers.hello-world-http.rule=Host(`{{ docker_traefik_example_url }}`)"
+      - "traefik.http.routers.hello-world-http.middlewares=https-redirect@file"
+      - "traefik.http.routers.hello-world-https.entrypoints=https"
+      - "traefik.http.routers.hello-world-https.rule=Host(`{{ docker_traefik_example_url }}`)"
+      - "traefik.http.routers.hello-world-https.tls=true"
+      - "traefik.http.routers.hello-world-https.tls.certresolver=letsencrypt"
+
+networks:
+  {{ docker_traefik_network }}:
+    external: true

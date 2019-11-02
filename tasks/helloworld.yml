@@ -1,0 +1,15 @@
+---
+
+- name: create folder hello-world
+  file:
+    path: "{{ docker_traefik_base_dir }}/hello-world"
+    state: directory
+
+- name: write docker-compose.yml for hello-world
+  template:
+    src: templates/hello-world/docker-compose.yml.j2
+    dest: "{{ docker_traefik_base_dir }}/hello-world/docker-compose.yml"
+
+- name: control hello-world container
+  docker_compose:
+    project_src: "{{ docker_traefik_base_dir }}/hello-world"

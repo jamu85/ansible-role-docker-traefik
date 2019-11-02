@@ -1,0 +1,24 @@
+[log]
+  level = "{{ docker_traefik_log_level }}"
+
+[entryPoints.http]
+  address = ":80"
+
+[entryPoints.https]
+  address = ":443"
+
+[api]
+dashboard = {{ docker_traefik_dashboard_enable }}
+
+[providers.docker]
+  network = "{{ docker_traefik_network }}"
+  exposedByDefault = {{ docker_traefik_exposedByDefault }}
+
+[providers.file]
+    filename = "/file-provider.yml"
+
+[certificatesResolvers.letsencrypt.acme]
+  email = "{{ docker_traefik_le_email }}"
+  storage = "acme.json"
+  [certificatesResolvers.letsencrypt.acme.httpChallenge]
+    entryPoint = "http"

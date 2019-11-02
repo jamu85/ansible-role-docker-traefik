@@ -1,0 +1,54 @@
+---
+
+#
+# role features settings
+#
+
+docker_traefik_example_webservice: true
+docker_traefik_example_url: test.home.local
+
+#
+# traefik static configuration variables
+#
+
+# https://docs.traefik.io/observability/logs/#level
+docker_traefik_log_level: ERROR
+
+# https://docs.traefik.io/providers/docker/#exposedbydefault
+docker_traefik_exposedByDefault: "false"
+
+# email for lets encrypt
+docker_traefik_le_email: admin@home.local
+
+# https://docs.traefik.io/providers/docker/#network
+docker_traefik_network: traefik
+
+#
+# dashboard settings
+#
+
+docker_traefik_dashboard_enable: "true"
+
+docker_traefik_dashboard_url: dashboard.home.local
+docker_traefik_dashboard_port: 8080
+
+# default username / password: traefik / traefik
+# look at https://docs.traefik.io/middlewares/basicauth/#users
+docker_traefik_htpasswd: traefik:$apr1$MtQFeQ0G$XSlo.AMRzhsczSZOvZDI5.
+
+#
+# docker-compose settings
+#
+
+# traefik image:version
+# see https://hub.docker.com/_/traefik
+docker_traefik_image: traefik
+
+# path to docker-compose and config files
+docker_traefik_base_dir: /opt/traefik
+
+# always pull image
+docker_traefik_pull: yes
+
+# stopped container
+docker_traefik_stopped: no

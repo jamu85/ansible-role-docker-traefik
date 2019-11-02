@@ -1,0 +1,7 @@
+---
+
+- name: restart traefik
+  docker_compose:
+    project_src: "{{ docker_traefik_base_dir }}"
+    restarted: yes
+  when: not docker_traefik_stopped

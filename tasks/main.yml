@@ -1,0 +1,8 @@
+---
+
+- name: configure and run traefik
+  import_tasks: traefik.yml
+
+- name: configure example web service
+  import_tasks: helloworld.yml
+  when: docker_traefik_example_webservice

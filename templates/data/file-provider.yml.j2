@@ -1,0 +1,15 @@
+http:
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+    htpasswd-auth:
+      basicAuth:
+        users:
+          - "{{ docker_traefik_htpasswd }}"
+{%if docker_traefik_dashboard_ip_whitelist is defined %}
+    ip-whitelist:
+      ipWhiteList:
+        sourceRange:
+          - "{{ docker_traefik_dashboard_ip_whitelist }}"
+{% endif %}
